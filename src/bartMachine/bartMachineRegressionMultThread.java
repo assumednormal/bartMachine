@@ -593,13 +593,13 @@ public class bartMachineRegressionMultThread extends Classifier implements Seria
 		final int num_samples_after_burn_in = numSamplesAfterBurning();
 		
 		final int n = records.length;
-		final double[][][] y_hats = new double[n][num_samples_after_burn_in][this.num_trees];
+		final double[][][] y_hats = new double[n][num_trees][num_samples_after_burn_in];
 		
 		if (num_cores_evaluate == 1) {
 			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < num_samples_after_burn_in; j++) {
-					for (int k = 0; k < num_trees; k++) {
-						y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[j][k].Evaluate(records[i]);
+				for (int j = 0; j < num_trees; j++) {
+					for (int k = 0; k < num_samples_after_burn_in; k++) {
+						y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[k][j].Evaluate(records[i]);
 					}
 				}
 			}
@@ -611,9 +611,9 @@ public class bartMachineRegressionMultThread extends Classifier implements Seria
 					public void run() {
 						for (int i = 0; i < n; i++) {
 							if (i % num_cores_evaluate == final_h) {
-								for (int j = 0; j < num_samples_after_burn_in; j++) {
-									for (int k = 0; k < num_trees; k++) {
-										y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[j][k].Evaluate(records[i]);
+								for (int j = 0; j < num_trees; j++) {
+									for (int k = 0; k < num_samples_after_burn_in; k++) {
+										y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[k][j].Evaluate(records[i]);
 									}
 								}
 							}
