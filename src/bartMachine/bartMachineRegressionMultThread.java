@@ -582,4 +582,54 @@ public class bartMachineRegressionMultThread extends Classifier implements Seria
         	return "Gibbs:\t" + gibbs + "\nTree:\t" + tree + "\n" + gibbs_samples_of_bart_trees_after_burn_in[gibbs][tree].nodeInfo();
 	}
 
+	/**
+	 * Return the predictions for each record from each tree for each burned-in Gibbs sample
+	 * 
+	 * @param records				the observations / records for which to return predictions
+	 * @param num_cores_evaluate	The number of CPU cores to use during evaluation	
+	 * @return						Predictions for all records further indexed by Gibbs sample and tree
+	 */
+	public double[][][] getAllPredictions(final double[][] records, final int num_cores_evaluate){
+		final int num_samples_after_burn_in = numSamplesAfterBurning();
+		
+		final int n = records.length;
+		final double[][][] y_hats = new double[n][num_samples_after_burn_in][this.num_trees];
+		
+		if (num_cores_evaluate == 1) {
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < num_samples_after_burn_in; j++) {
+					for (int k = 0; k < num_trees; k++) {
+						y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[j][k].Evaluate(records[i]);
+					}
+				}
+			}
+		}	else {
+			Thread[] fixed_thread_pool = new Thread[num_cores_evaluate];
+			for (int h = 0; h < num_cores_evaluate; h++) {
+				final int final_h = h;
+				Thread thread = new Thread() {
+					public void run() {
+						for (int i = 0; i < n; i++) {
+							if (i % num_cores_evaluate == final_h) {
+								for (int j = 0; j < num_samples_after_burn_in; j++) {
+									for (int k = 0; k < num_trees; k++) {
+										y_hats[i][j][k] = gibbs_samples_of_bart_trees_after_burn_in[j][k].Evaluate(records[i]);
+									}
+								}
+							}
+						}
+					}
+				};
+				thread.start();
+				fixed_thread_pool[h] = thread;
+			}
+			for (int h = 0; h < num_cores_evaluate; h++){
+				try {
+					fixed_thread_pool[h].join();
+				} catch (InterruptedException e) {}
+			}
+		}
+		return y_hats;
+	}
+
 }
