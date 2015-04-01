@@ -854,25 +854,25 @@ public class bartMachineTreeNode implements Cloneable, Serializable {
 	 * @return		Information about this node
 	 */
 	public String nodeInfo() {
-        String result = "ID\t" + this.stringID();
-        
-        if (this.depth > 0) {
-            result += "\nPA\t" + this.parent.stringID();
-        }
-        
-        if (this.isLeaf) {
-            result += "\nPR\t" + this.y_pred + "\n";
-        } else {
-            result += "\nLC\t" + this.left.stringID();
-            result += "\nRC\t" + this.right.stringID();
-	    result += "\nSA\t" + this.splitAttributeM;
-	    result += "\nSV\t" + this.splitValue;
-	    result += "\nMI\t" + (this.sendMissingDataRight ? "R" : "L") + "\n";
-            result += this.left.nodeInfo();
-            result += this.right.nodeInfo();
-        }
-        
-        return result;
+        	String result = "ID\t" + this.stringID();
+        	
+        	if (this.depth > 0) {
+        	    result += "\nPA\t" + this.parent.stringID();
+        	}
+        	
+        	if (this.isLeaf) {
+        	    result += "\nPR\t" + this.y_pred + "\n";
+        	} else {
+        	    result += "\nLC\t" + this.left.stringID();
+        	    result += "\nRC\t" + this.right.stringID();
+		    result += "\nSA\t" + this.splitAttributeM;
+		    result += "\nSV\t" + this.splitValue;
+		    result += "\nMI\t" + (this.sendMissingDataRight ? "R" : "L") + "\n";
+        	    result += this.left.nodeInfo();
+        	    result += this.right.nodeInfo();
+        	}
+        	
+        	return result;
 	}
 
 }
