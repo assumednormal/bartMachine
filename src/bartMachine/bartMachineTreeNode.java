@@ -857,15 +857,15 @@ public class bartMachineTreeNode implements Cloneable, Serializable {
         String result = "ID\t" + this.stringID();
         
         if (this.depth > 0) {
-            result += "\tPA\t" + this.parent.stringID();
+            result += "\nPA\t" + this.parent.stringID();
         }
         
         if (this.isLeaf) {
-            result += "\tPR\t" + this.y_pred + "\n";
+            result += "\nPR\t" + this.y_pred + "\n";
         } else {
-            result += "\tLC\t" + this.left.stringID();
-            result += "\tRC\t" + this.right.stringID();
-            result += "\tDR\t" + this.splitAttributeM + " <= " + this.splitValue + " & M -> " + (this.sendMissingDataRight ? "R" : "L") + "\n";
+            result += "\nLC\t" + this.left.stringID();
+            result += "\nRC\t" + this.right.stringID();
+            result += "\nDR\t" + this.splitAttributeM + " <= " + this.splitValue + " & M -> " + (this.sendMissingDataRight ? "R" : "L") + "\n";
             result += this.left.nodeInfo();
             result += this.right.nodeInfo();
         }
