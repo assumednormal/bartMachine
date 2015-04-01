@@ -571,5 +571,15 @@ public class bartMachineRegressionMultThread extends Classifier implements Seria
 	}
 	
 	/** Must be implemented, but does nothing */
-	public void StopBuilding() {}	
+	public void StopBuilding() {}
+    
+	/**
+	 * Return splitting logic for a specific iteration of a given tree
+	 * 
+	 * @return						Splitting logic for a specific iteration of a given tree
+	 */
+	public String getDecisionRules(int gibbs, int tree){
+        return gibbs_samples_of_bart_trees_after_burn_in[gibbs][tree].nodeInfo();
+	}
+
 }
